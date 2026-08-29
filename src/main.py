@@ -43,6 +43,7 @@ def root():
 
 @app.get("/blog")
 def blog():
+    print(f"Fetching all blog posts {len(posts)}")
     return posts
 
 
