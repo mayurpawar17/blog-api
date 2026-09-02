@@ -1,6 +1,17 @@
 from fastapi import FastAPI
 
+from src.exception.app_exception import AppException
+from src.exception.blog import PostNotFoundException
+from src.exception.handlers import app_exception_handler
+from src.schemas.response import ApiResponse, ErrorResponse
+
 app = FastAPI(title="Blog API", version="1.0.0")
+
+
+app.add_exception_handler(
+    AppException,
+    app_exception_handler,
+)
 
 #mock database
 posts = [
@@ -49,7 +60,8 @@ def blog():
 
 @app.get("/blog/{id}")
 def blog_by_id(id:int):
+
     for post in posts:
         if post["id"] == id:
-            return post
-    return {"message": "Post not found"}
+            return ApiResponse(success=True, data=post)
+    raise PostNotFoundException(post_id=id)
