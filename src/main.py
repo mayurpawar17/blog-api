@@ -1,10 +1,10 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI
 from scalar_fastapi import get_scalar_api_reference
 
 from src.exception.app_exception import AppException
 from src.exception.blog import PostNotFoundException
 from src.exception.handlers import app_exception_handler
-from src.schemas.response import ApiResponse, ErrorResponse
+from src.schemas.response import ApiResponse
 
 app = FastAPI(title="Blog API", version="1.0.0")
 
@@ -59,38 +59,6 @@ def blog():
     print(f"Fetching all blog posts {len(posts)}")
     return posts
 
-
-@app.get("/shipment")
-def shipment(shipment_id: int | None = None):
-    if shipment_id is None or shipment_id <= 0:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Shipment ID must be a positive integer",
-        )
-    return {
-        "shipment_id": shipment_id,
-        "status": "In Transit",
-        "estimated_delivery": "2024-06-15",
-        "origin": "New York, NY",
-        "destination": "Los Angeles, CA",
-    }
-
-
-@app.get("/shipment/{shipment_id}")
-def shipment_by_id(shipment_id: int):
-    if shipment_id <= 0:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Shipment ID must be a positive integer",
-        )
-        
-    return {
-        "shipment_id": shipment_id,
-        "status": "In Transit",
-        "estimated_delivery": "2024-06-15",
-        "origin": "New York, NY",
-        "destination": "Los Angeles, CA",
-    }
 
 
 @app.get("/blog/{id}")
